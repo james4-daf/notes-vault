@@ -1,0 +1,283 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" href="/src/styles.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Notes</title>
+    <script type="module" src="/src/main.ts" defer></script>
+  </head>
+  <body>
+    <div class="app">
+      <aside id="sidebar" class="sidebar">
+        <header class="explorer-bar">
+          <button
+            id="vault-toggle"
+            type="button"
+            class="vault-toggle"
+            aria-expanded="false"
+            aria-controls="vault-menu"
+            title="Switch vault"
+          >
+            <span id="vault-name" class="vault-name">Vault</span>
+            <svg class="vault-caret" viewBox="0 0 16 16" aria-hidden="true">
+              <path
+                fill="currentColor"
+                d="M4.47 5.97a.75.75 0 0 1 1.06 0L8 8.44l2.47-2.47a.75.75 0 1 1 1.06 1.06l-3 3a.75.75 0 0 1-1.06 0l-3-3a.75.75 0 0 1 0-1.06z"
+              />
+            </svg>
+          </button>
+          <div class="explorer-actions">
+            <button
+              id="new-file"
+              type="button"
+              class="icon-btn"
+              title="New Note"
+              aria-label="New note"
+            >
+              <svg viewBox="0 0 16 16" aria-hidden="true">
+                <path
+                  fill="currentColor"
+                  d="M9.14 1H3.5A1.5 1.5 0 0 0 2 2.5v11A1.5 1.5 0 0 0 3.5 15h9a1.5 1.5 0 0 0 1.5-1.5V5.36zM9 2.2 12.3 5.5H9zM3.5 14a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H8v4h4v7.5a.5.5 0 0 1-.5.5z"
+                />
+                <path
+                  fill="currentColor"
+                  d="M14.5 10.5H13v-1.5h-1.5V10.5H10v1.5h1.5V13.5H13V12h1.5z"
+                />
+              </svg>
+            </button>
+            <button
+              id="new-folder"
+              type="button"
+              class="icon-btn"
+              title="New Folder"
+              aria-label="New folder"
+            >
+              <svg viewBox="0 0 16 16" aria-hidden="true">
+                <path
+                  fill="currentColor"
+                  d="M7.05 2H2.5A1.5 1.5 0 0 0 1 3.5v9A1.5 1.5 0 0 0 2.5 14h7.1a3.5 3.5 0 0 1-.6-1H2.5a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5h4.2l1 1H9.5V5h4v2.1c.54.1 1.04.3 1.5.58V4.5A1.5 1.5 0 0 0 13.5 3H8.2z"
+                />
+                <path
+                  fill="currentColor"
+                  d="M15 11.5h-1.5V10H12v1.5h-1.5V13H12v1.5h1.5V13H15z"
+                />
+              </svg>
+            </button>
+            <button
+              id="sync-now"
+              type="button"
+              class="icon-btn"
+              title="Sync"
+              aria-label="Sync vault"
+            >
+              <svg viewBox="0 0 16 16" aria-hidden="true">
+                <path
+                  fill="currentColor"
+                  d="M8 1.5a5.5 5.5 0 0 0-5.3 4H1.5l2 2.5 2-2.5H4.2A4 4 0 1 1 4 10.5l-.9.9A5.5 5.5 0 1 0 8 1.5zm3.3 3.2-2 2.5H10.8A4 4 0 0 1 12 5.5l.9-.9A5.47 5.47 0 0 0 8 2.5c-.4 0-.8 0-1.2.1l1.1 1.1H11.3z"
+                />
+              </svg>
+            </button>
+            <button
+              id="sync-settings"
+              type="button"
+              class="icon-btn"
+              title="Sync settings"
+              aria-label="Sync settings"
+            >
+              <svg viewBox="0 0 16 16" aria-hidden="true">
+                <path
+                  fill="currentColor"
+                  d="M6.3 1.5h3.4l.3 1.4a4.9 4.9 0 0 1 1.2.7l1.4-.5 1.7 2.9-1.1 1c.1.4.1.8.1 1.2s0 .8-.1 1.2l1.1 1-1.7 2.9-1.4-.5a4.9 4.9 0 0 1-1.2.7l-.3 1.4H6.3l-.3-1.4a4.9 4.9 0 0 1-1.2-.7l-1.4.5L1.7 10l1.1-1A5.3 5.3 0 0 1 2.7 8c0-.4 0-.8.1-1.2l-1.1-1 1.7-2.9 1.4.5a4.9 4.9 0 0 1 1.2-.7zm1.7 3.8A2.7 2.7 0 1 0 8 11.2 2.7 2.7 0 0 0 8 5.3z"
+                />
+              </svg>
+            </button>
+          </div>
+        </header>
+        <div id="vault-menu" class="vault-menu" hidden>
+          <div id="vault-list" class="vault-list" role="listbox" aria-label="Vaults"></div>
+          <form id="vault-create-form" class="vault-create" hidden>
+            <input
+              id="vault-create-name"
+              aria-label="Vault name"
+              placeholder="Vault name"
+              autocomplete="off"
+              spellcheck="false"
+            />
+          </form>
+          <div class="vault-menu-actions">
+            <button id="vault-new" type="button" class="vault-action">New vault</button>
+            <button id="vault-rename" type="button" class="vault-action">Rename</button>
+            <button id="vault-delete" type="button" class="vault-action danger">Delete</button>
+          </div>
+        </div>
+        <form id="create-form" class="inline-create" hidden>
+          <input
+            id="create-path"
+            aria-label="Name"
+            autocomplete="off"
+            spellcheck="false"
+          />
+        </form>
+        <nav id="tree" class="tree" aria-label="Notes"></nav>
+        <p id="vault-path" class="vault-path"></p>
+      </aside>
+      <div class="main">
+        <div class="tab-bar">
+          <button
+            id="sidebar-toggle"
+            type="button"
+            class="sidebar-toggle"
+            title="Toggle sidebar"
+            aria-label="Toggle sidebar"
+            aria-controls="sidebar"
+            aria-expanded="true"
+          >
+            <svg viewBox="0 0 16 16" aria-hidden="true">
+              <path
+                fill="currentColor"
+                d="M2.75 2h10.5A1.75 1.75 0 0 1 15 3.75v8.5A1.75 1.75 0 0 1 13.25 14H2.75A1.75 1.75 0 0 1 1 12.25v-8.5A1.75 1.75 0 0 1 2.75 2zm0 1.5a.25.25 0 0 0-.25.25v8.5c0 .138.112.25.25.25H6V3.5zm4.75 0v9.5h5.75a.25.25 0 0 0 .25-.25v-8.5a.25.25 0 0 0-.25-.25z"
+              />
+            </svg>
+          </button>
+          <div class="tab-strip">
+            <div id="tabs" class="tabs" role="tablist" aria-label="Open notes"></div>
+            <button id="new-tab" type="button" class="new-tab" title="New note" aria-label="New note">
+              +
+            </button>
+          </div>
+          <button
+            id="calendar-toggle"
+            type="button"
+            class="calendar-toggle"
+            title="Toggle calendar"
+            aria-label="Toggle calendar"
+            aria-controls="calendar"
+            aria-expanded="true"
+          >
+            <svg viewBox="0 0 16 16" aria-hidden="true">
+              <path
+                fill="currentColor"
+                d="M5.25 1a.75.75 0 0 1 .75.75V3h4V1.75a.75.75 0 0 1 1.5 0V3h.75A1.75 1.75 0 0 1 14 4.75v8.5A1.75 1.75 0 0 1 12.25 15h-8.5A1.75 1.75 0 0 1 2 13.25v-8.5A1.75 1.75 0 0 1 3.75 3H4.5V1.75A.75.75 0 0 1 5.25 1zM3.5 6.5v6.75c0 .138.112.25.25.25h8.5a.25.25 0 0 0 .25-.25V6.5z"
+              />
+            </svg>
+          </button>
+        </div>
+        <section class="editor-pane">
+          <div id="format-bar" class="format-bar" role="toolbar" aria-label="Formatting">
+            <button type="button" data-cmd="h1" title="Heading 1">H1</button>
+            <button type="button" data-cmd="h2" title="Heading 2">H2</button>
+            <button type="button" data-cmd="h3" title="Heading 3">H3</button>
+            <span class="format-sep" aria-hidden="true"></span>
+            <button type="button" data-cmd="bold" title="Bold"><strong>B</strong></button>
+            <button type="button" data-cmd="italic" title="Italic"><em>I</em></button>
+            <button type="button" data-cmd="strike" title="Strikethrough"><s>S</s></button>
+            <button type="button" data-cmd="code" title="Inline code">&lt;/&gt;</button>
+            <span class="format-sep" aria-hidden="true"></span>
+            <button type="button" data-cmd="bullet" title="Bullet list">• List</button>
+            <button type="button" data-cmd="ordered" title="Numbered list">1. List</button>
+            <button type="button" data-cmd="quote" title="Quote">Quote</button>
+            <button type="button" data-cmd="codeBlock" title="Code block">Code</button>
+            <span class="format-spacer" aria-hidden="true"></span>
+            <span id="status" class="status"></span>
+            <button id="pin" type="button" class="tool-action" title="Pin note" aria-label="Pin note" aria-pressed="false" disabled>
+              <svg viewBox="0 0 16 16" aria-hidden="true">
+                <circle cx="10.3" cy="4.7" r="3.35" fill="currentColor" />
+                <path
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.35"
+                  stroke-linecap="round"
+                  d="M8.15 7.45 3.1 13.6"
+                />
+              </svg>
+            </button>
+            <button id="delete" type="button" class="tool-action danger" title="Delete note" aria-label="Delete note" disabled>
+              <svg viewBox="0 0 16 16" aria-hidden="true">
+                <path
+                  fill="currentColor"
+                  d="M6.5 1.5A.5.5 0 0 1 7 1h2a.5.5 0 0 1 .5.5V2H13a.5.5 0 0 1 0 1h-.58l-.7 9.1A1.5 1.5 0 0 1 10.23 13.5H5.77a1.5 1.5 0 0 1-1.49-1.4L3.58 3H3a.5.5 0 0 1 0-1h3.5zM5.2 12.09a.5.5 0 0 0 .5.41h4.6a.5.5 0 0 0 .5-.41L11.41 3H4.59zM6.5 5.5a.5.5 0 0 1 1 0v5a.5.5 0 0 1-1 0zm2.5 0a.5.5 0 0 1 1 0v5a.5.5 0 0 1-1 0z"
+                />
+              </svg>
+            </button>
+          </div>
+          <div id="editor" class="editor" aria-label="Note"></div>
+        </section>
+      </div>
+      <dialog id="delete-dialog" class="modal">
+        <form method="dialog" class="modal-card">
+          <h2 id="delete-title">Delete note?</h2>
+          <p id="delete-message">This cannot be undone.</p>
+          <div class="modal-actions">
+            <button value="cancel" type="submit" class="modal-cancel">Cancel</button>
+            <button value="confirm" type="submit" class="modal-danger">Delete</button>
+          </div>
+        </form>
+      </dialog>
+      <dialog id="sync-dialog" class="modal">
+        <form id="sync-form" method="dialog" class="modal-card sync-card">
+          <h2>Cloud sync</h2>
+          <p class="sync-help">
+            Local vault stays on disk. Sync push/pulls encrypted notes to your Cloudflare Worker.
+          </p>
+          <label class="sync-field">
+            <span>Worker URL</span>
+            <input
+              id="sync-url"
+              name="worker_url"
+              type="url"
+              placeholder="https://notes-sync.example.workers.dev"
+              autocomplete="off"
+              spellcheck="false"
+            />
+          </label>
+          <label class="sync-field">
+            <span>Vault token</span>
+            <input
+              id="sync-token"
+              name="token"
+              type="password"
+              placeholder="Bearer token from wrangler secret"
+              autocomplete="off"
+              spellcheck="false"
+            />
+          </label>
+          <label class="sync-field">
+            <span>Passphrase</span>
+            <input
+              id="sync-passphrase"
+              name="passphrase"
+              type="password"
+              placeholder="Encrypts note bodies"
+              autocomplete="off"
+              spellcheck="false"
+            />
+          </label>
+          <div class="modal-actions">
+            <button value="cancel" type="submit" class="modal-cancel">Cancel</button>
+            <button id="sync-save" value="save" type="submit" class="modal-confirm">Save</button>
+          </div>
+        </form>
+      </dialog>
+      <aside id="calendar" class="calendar" aria-label="Daily notes calendar">
+        <header class="calendar-header">
+          <div class="calendar-title">
+            <span id="cal-month"></span>
+            <span id="cal-year" class="cal-year"></span>
+          </div>
+          <div class="calendar-nav">
+            <button id="cal-prev" type="button" aria-label="Previous month">‹</button>
+            <button id="cal-today" type="button">Today</button>
+            <button id="cal-next" type="button" aria-label="Next month">›</button>
+          </div>
+        </header>
+        <div class="cal-weekdays" aria-hidden="true">
+          <span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span
+          ><span>Sat</span><span>Sun</span>
+        </div>
+        <div id="cal-grid" class="cal-grid" role="grid" aria-label="Month"></div>
+      </aside>
+    </div>
+    <div id="link-suggest" class="link-suggest" hidden role="listbox" aria-label="Link a note"></div>
+  </body>
+</html>

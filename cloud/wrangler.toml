@@ -1,0 +1,11 @@
+name = "notes-sync"
+main = "src/index.ts"
+compatibility_date = "2025-11-01"
+
+# Create the bucket in the Cloudflare dashboard (R2 → Create), then set the name here.
+[[r2_buckets]]
+binding = "VAULT"
+bucket_name = "notes-bucket"
+
+# After deploy: npx wrangler secret put VAULT_TOKEN
+# Desktop app uses Authorization: Bearer <that token>
